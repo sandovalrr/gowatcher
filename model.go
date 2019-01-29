@@ -14,9 +14,12 @@ type WatcherOption struct {
 	Dirs       []string
 	Recursive  bool
 	Extensions []string
-	Wait       time.Duration
-	onCreate   func(filePath string)
-	onDelete   func(filePath string)
+}
+
+//Emitter emitter
+type Emitter struct {
+	Channel chan string
+	Wait    time.Duration
 }
 
 // Watcher Model
@@ -24,4 +27,5 @@ type Watcher struct {
 	Options       *WatcherOption
 	Fs            *fsnotify.Watcher
 	WatchingSlice []string
+	Emitter       map[fsnotify.Op][]*Emitter
 }

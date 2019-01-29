@@ -127,16 +127,12 @@ func (watcher *Watcher) onEvent(event *fsnotify.Event) {
 	}
 
 	if event.Op&fsnotify.Remove == fsnotify.Remove {
-
 		if isDirectory {
 			if utils.SliceStringContains(watcher.WatchingSlice, event.Name) {
 				watcher.Fs.Remove(event.Name)
 				watcher.WatchingSlice = utils.SliceRemoveString(watcher.WatchingSlice, event.Name)
 			}
 		}
-
-		watcher.onRemove(event)
-		return
 	}
 
 	if event.Op&fsnotify.Create == fsnotify.Create {
@@ -145,31 +141,48 @@ func (watcher *Watcher) onEvent(event *fsnotify.Event) {
 			log.Infof("New Directory %s created, checking if recursive flag is on to start watching files", event.Name)
 			return
 		}
-
-		watcher.onCreate(event)
-		return
 	}
 
 }
 
-func (watcher *Watcher) onCreate(event *fsnotify.Event) {
-	log.Infof("%s created. %v seconds to trigger event", event.Name, watcher.Options.Wait.Seconds)
+func (watcher *Watcher) emit(event *fsnotify.Event) {
+	if emitters, ok := watcher.Emitter[event.Op]; ok {
+		for _, emitter := range emitters {
 
-	go func(path string) {
-		select {
-		case <-time.After(watcher.Options.Wait * time.Second):
-			log.Infof("Trigering create event on file %s", path)
-			if watcher.Options.onCreate != nil {
-				watcher.Options.onCreate(path)
-			}
+			go func(emitter *Emitter, event *fsnotify.Event) {
+				select {
+				case <-time.After(emitter.Wait * time.Second):
+					log.Infof("Trigering %s event on file %s", event.Op.String(), event.Name)
+					emitter.Channel <- event.Name
+				}
+			}(emitter, event)
+
 		}
-	}(event.Name)
-
+	}
 }
 
-func (watcher *Watcher) onRemove(event *fsnotify.Event) {
-	log.Infof("%s removed", event.Name)
-	if watcher.Options.onDelete != nil {
-		watcher.Options.onDelete(event.Name)
+//Subscribe subscribe to events
+func (watcher *Watcher) Subscribe(op fsnotify.Op, emitter *Emitter) {
+
+	if watcher.Emitter == nil {
+		watcher.Emitter = make(map[fsnotify.Op][]*Emitter)
+	}
+
+	if _, ok := watcher.Emitter[op]; ok {
+		watcher.Emitter[op] = append(watcher.Emitter[op], emitter)
+	} else {
+		watcher.Emitter[op] = []*Emitter{emitter}
+	}
+}
+
+//UnSubscribe unsubscribe to events
+func (watcher *Watcher) UnSubscribe(op fsnotify.Op, emitter *Emitter) {
+
+	if _, ok := watcher.Emitter[op]; ok {
+		for index, e := range watcher.Emitter[op] {
+			if e == emitter {
+				watcher.Emitter[op] = append(watcher.Emitter[op][:index], watcher.Emitter[op][index+1:]...)
+			}
+		}
 	}
 }
