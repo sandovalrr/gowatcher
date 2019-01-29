@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -30,16 +29,12 @@ func SliceRemoveString(slice []string, item string) []string {
 func GetSubFolders(root string) []string {
 	result := []string{}
 
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			result = append(result, path)
 		}
 		return nil
 	})
-
-	if err != nil {
-		log.Fatalln(err)
-	}
 
 	return result
 }
@@ -48,7 +43,6 @@ func GetSubFolders(root string) []string {
 func IsDirectory(path string) bool {
 	fi, err := os.Stat(path)
 	if err != nil {
-		log.Fatalln(err)
 		return false
 	}
 
