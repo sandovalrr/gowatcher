@@ -15,10 +15,13 @@ type WatcherOption struct {
 	Recursive  bool
 	Extensions []string
 	Wait       time.Duration
+	onCreate   func(filePath string)
+	onDelete   func(filePath string)
 }
 
 // Watcher Model
 type Watcher struct {
-	Options *WatcherOption
-	Fs      *fsnotify.Watcher
+	Options       *WatcherOption
+	Fs            *fsnotify.Watcher
+	WatchingSlice []string
 }
