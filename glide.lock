@@ -1,10 +1,18 @@
-hash: 23322a8e9387399a72458545a160fd58b0ab88ec917fbe4df7716d22f6ed5585
-updated: 2019-01-28T22:46:28.240015963-04:00
+hash: bff7603f73ed7e5533dfb7325c14faba42a814836f2616de99a432740982c8a1
+updated: 2019-01-28T23:13:19.8894428-04:00
 imports:
+- name: github.com/coreos/go-systemd
+  version: 24036eb3df68550d24a2736c5d013f4e83366866
+  subpackages:
+  - journal
 - name: github.com/coreos/pkg
   version: 97fdf19511ea361ae1c100dd393cc47f8dcfa1e1
   subpackages:
   - capnslog
 - name: github.com/fsnotify/fsnotify
   version: c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9
+- name: golang.org/x/sys
+  version: 90796e5a05ce440b41c768bd9af257005e470461
+  subpackages:
+  - unix
 testImports: []
