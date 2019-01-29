@@ -1,5 +1,5 @@
 .DS_Store
 debug
 pkg/*
-vender/*
+vendor/*
 bin/*
