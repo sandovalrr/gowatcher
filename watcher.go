@@ -127,6 +127,14 @@ func (watcher *Watcher) onEvent(event *fsnotify.Event) {
 	}
 
 	if event.Op&fsnotify.Remove == fsnotify.Remove {
+
+		if isDirectory {
+			if utils.SliceStringContains(watcher.WatchingSlice, event.Name) {
+				watcher.Fs.Remove(event.Name)
+				watcher.WatchingSlice = utils.SliceRemoveString(watcher.WatchingSlice, event.Name)
+			}
+		}
+
 		watcher.onRemove(event)
 		return
 	}
