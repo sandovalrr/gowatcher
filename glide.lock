@@ -1,0 +1,10 @@
+hash: 23322a8e9387399a72458545a160fd58b0ab88ec917fbe4df7716d22f6ed5585
+updated: 2019-01-28T22:46:28.240015963-04:00
+imports:
+- name: github.com/coreos/pkg
+  version: 97fdf19511ea361ae1c100dd393cc47f8dcfa1e1
+  subpackages:
+  - capnslog
+- name: github.com/fsnotify/fsnotify
+  version: c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9
+testImports: []
