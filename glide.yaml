@@ -1,8 +1,8 @@
-package: github.com/sandovalrr/go-watcher
+package: github.com/sandovalrr/gowatcher
 import:
-- package: github.com/coreos/pkg
-  version: v4
-  subpackages:
-  - capnslog
-- package: github.com/fsnotify/fsnotify
-  version: v1.4.7
+  - package: github.com/coreos/pkg
+    version: v4
+    subpackages:
+      - capnslog
+  - package: github.com/fsnotify/fsnotify
+    version: v1.4.7
