@@ -143,6 +143,7 @@ func (watcher *Watcher) onEvent(event *fsnotify.Event) {
 		}
 	}
 
+	watcher.emit(event)
 }
 
 func (watcher *Watcher) emit(event *fsnotify.Event) {
