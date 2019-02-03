@@ -32,7 +32,7 @@ import (
 watcher := gowatcher.NewWatcher(gowatcher.WatcherOption{
   Dirs: []string{"test_path_to_watch","another_path_to_watch"},
   Recursive: true,
-  Extensions: []string{".mp3",".wav"}
+  Extensions: []string{".mp3",".wav"},
 })
 
 go watcher.Start()
