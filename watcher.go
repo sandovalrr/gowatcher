@@ -39,6 +39,7 @@ func (watcher *Watcher) Start() {
 	defer fs.Close()
 
 	done := make(chan bool)
+	watcher.ch = done
 
 	go watcher.handleEvents()
 
@@ -47,6 +48,18 @@ func (watcher *Watcher) Start() {
 	}
 
 	<-done
+
+}
+
+//IsWatching return if watcher is active
+func (watcher *Watcher) IsWatching() bool {
+	return watcher.ch != nil
+}
+
+//Close close file watcher
+func (watcher *Watcher) Close() {
+	close(watcher.ch)
+	watcher.ch = nil
 }
 
 func (watcher *Watcher) watch(path string) {
@@ -91,7 +104,9 @@ func (watcher *Watcher) handleEvents() {
 		case event := <-watcher.Fs.Events:
 			watcher.onEvent(&event)
 		case err := <-watcher.Fs.Errors:
-			log.Error(err)
+			if watcher.IsWatching() {
+				log.Error(err)
+			}
 		}
 	}
 }
@@ -117,6 +132,11 @@ func (watcher *Watcher) isExtensionFileValid(event *fsnotify.Event) (string, boo
 }
 
 func (watcher *Watcher) onEvent(event *fsnotify.Event) {
+
+	if !watcher.IsWatching() {
+		return
+	}
+
 	isDirectory := utils.IsDirectory(event.Name)
 
 	if !isDirectory {

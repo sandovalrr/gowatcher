@@ -24,6 +24,7 @@ type Emitter struct {
 
 // Watcher Model
 type Watcher struct {
+	ch            chan bool
 	Options       *WatcherOption
 	Fs            *fsnotify.Watcher
 	WatchingSlice []string
