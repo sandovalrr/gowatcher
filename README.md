@@ -10,7 +10,7 @@ $ go get github.com/sandovalrr/gowatcher
 or using glide
 
 ```text
-$ glide get github.com/sandovalrr/gowatchesr
+$ glide get github.com/sandovalrr/gowatcher
 ```
 
 ## Usage
